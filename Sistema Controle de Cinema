@@ -1,0 +1,224 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Definição de constantes para o tamanho máximo de filmes, sessões, títulos e salas
+#define MAX_FILMES 100
+#define MAX_SESSOES 100
+#define MAX_TITULO 100
+#define MAX_SALA 10
+// Estrutura para armazenar dados sobre um filme
+typedef struct {
+    char titulo[MAX_TITULO];    // Título do filme
+    char genero[MAX_TITULO];    // Gênero do filme
+    int duracao;                // Duração do filme em minutos
+    int classificacao;          // Classificação indicativa do filme
+} Filme;
+// Estrutura para armazenar dados sobre uma sessão de filme
+typedef struct {
+    Filme filme;                // Filme exibido na sessão
+    char sala[MAX_SALA];        // Sala onde a sessão ocorre
+    char horario[MAX_TITULO];   // Horário da sessão
+    int totalIngressos;         // Total de ingressos disponíveis para a sessão
+    int ingressosDisponiveis;   // Ingressos ainda disponíveis para reserva
+} Sessao;
+
+// Arrays globais para armazenar filmes e sessões, e contadores para o número de filmes e sessões
+Filme filmes[MAX_FILMES];
+Sessao sessoes[MAX_SESSOES];
+int num_filmes = 0;
+int num_sessoes = 0;
+
+// Função para adicionar um novo filme ao sistema
+void adicionarFilme() {
+    // Verificando se o número máximo de filmes foi alcançado
+    if (num_filmes >= MAX_FILMES) {
+        printf("Maior numero de filmes alcançados.\n");
+        return;
+    }
+    
+    Filme novo_filme;
+    
+    // Coleta informações sobre o filme do usuário
+    printf("Por favor, insira o título do filme: ");
+    scanf(" %[^\n]%*c", novo_filme.titulo);
+    
+    printf("Por favor, insira o gênero do filme: ");
+    scanf(" %[^\n]%*c", novo_filme.genero);
+    
+    printf("Por favor, mostre a durabilidade do filme em minutos: ");
+    scanf("%d", &novo_filme.duracao);
+    
+    printf("Informe a classificação indicativa do filme: ");
+    scanf("%d", &novo_filme.classificacao);
+    
+    // Adiciona o filme ao array de filmes e incrementa o contador de filmes
+    filmes[num_filmes] = novo_filme;
+    num_filmes++;
+    
+    printf("Filme inserido com sucesso.\n");
+}
+
+// Função para listar todos os filmes cadastrados
+void listarFilmes() {
+    // Verifica se há filmes cadastrados
+    if (num_filmes == 0) {
+        printf("Não há filmes cadastrados.\n");
+        return;
+    }
+    
+    // Exibe as informações de cada filme
+    printf("Lista de filmes:\n");
+    for (int i = 0; i < num_filmes; i++) {
+        printf("Título: %s\n", filmes[i].titulo);
+        printf("Gênero: %s\n", filmes[i].genero);
+        printf("Duração: %d minutos\n", filmes[i].duracao);
+        printf("Classificação: %d\n", filmes[i].classificacao);
+        printf("-------------------------\n");
+    }
+}
+
+// Função para adicionar uma nova sessão ao sistema
+void adicionarSessao() {
+    // Verifica se o número máximo de sessões foi alcançado
+    if (num_sessoes >= MAX_SESSOES) {
+        printf("Limite máximo de sessões foi alcançado.\n");
+        return;
+    }
+    
+    Sessao nova_sessao;
+    int i;
+    
+    // Coleta informações sobre a sessão do usuário
+    printf("Por gentileza, informe o horário da sessão: ");
+    scanf(" %[^\n]%*c", nova_sessao.horario);
+    
+    printf("Por gentileza, insira o número da sala da sessão: ");
+    scanf(" %[^\n]%*c", nova_sessao.sala);
+    
+    // Lista filmes para o usuário escolher qual será exibido na sessão
+    printf("Escolha um filme para a sessão:\n");
+    listarFilmes();
+    printf("Informe o número do filme: ");
+    scanf("%d", &i);
+    
+    // Verifica se o número do filme é válido
+    if (i < 0 || i >= num_filmes) {
+        printf("Opa, o número do filme está inválido.\n");
+        return;
+    }
+    
+    // Associa o filme escolhido à nova sessão
+    nova_sessao.filme = filmes[i];
+    
+    // Coleta o número de ingressos disponíveis para a sessão
+    printf("Por favor, informe o total de ingressos disponíveis: ");
+    scanf("%d", &nova_sessao.totalIngressos);
+    nova_sessao.ingressosDisponiveis = nova_sessao.totalIngressos;
+    
+    // Adiciona a sessão ao array de sessões e incrementa o contador de sessões
+    sessoes[num_sessoes] = nova_sessao;
+    num_sessoes++;
+    
+    printf("A sessão foi inserida com êxito.\n");
+}
+
+// Função para listar todas as sessões cadastradas
+void listarSessoes() {
+    // Verifica se há sessões cadastradas
+    if (num_sessoes == 0) {
+        printf("Sessões não encontradas.\n");
+        return;
+    }
+    
+    // Exibe as informações de cada sessão
+    printf("Lista de sessões:\n");
+    for (int i = 0; i < num_sessoes; i++) {
+        printf("Sala: %s\n", sessoes[i].sala);
+        printf("Horário: %s\n", sessoes[i].horario);
+        printf("Filme: %s\n", sessoes[i].filme.titulo);
+        printf("Ingressos à venda: %d\n", sessoes[i].ingressosDisponiveis);
+    }
+}
+
+// Função para reservar ingressos para uma sessão
+void reservarIngresso() {
+    // Verifica se há sessões disponíveis para reserva
+    if (num_sessoes == 0) {
+        printf("Nenhuma sessão disponível para reserva.\n");
+        return;
+    }
+    
+    int i, quantidade;
+    
+//Exibe as sessões disponíveis para que o usuário escolha qual deseja reservar ingressos    printf("Informe a sessão que deseja reservar:\n");
+    listarSessoes();
+    printf("Insira o número da sessão: ");
+    scanf("%d", &i);
+    
+    // Verificando se o número da sessão é válido
+    if (i < 0 || i >= num_sessoes) {
+        printf("Número de sessão inválido.\n");
+        return;
+    }
+    
+// Obtém a quantidade de ingressos desejada pelo usuário
+
+    printf("Informe o número de ingressos desejados: ");
+    scanf("%d", &quantidade);
+    
+// Verifica a disponibilidade de ingressos suficientes
+    if (quantidade > sessoes[i].ingressosDisponiveis) {
+        printf("Ingressos em quantidade insuficiente.\n");
+        return;
+    }
+    
+// Atualizando a quantidade de ingressos disponíveis após a reserva ser realizada
+    sessoes[i].ingressosDisponiveis -= quantidade;
+    printf("Reserva efetuada com sucesso.\n");
+}
+
+//Função principal que apresenta o menu e processa a seleção do usuário.
+int main() {
+    int opcao;
+    
+    while (1) {
+        // Exibindo o menu do sistema
+        printf("Sistema de Controle de Cinema\n");
+        printf("01- Inserir filme\n");
+        printf("02- Mostrar Lista de Filmes\n");
+        printf("03- Incluir Sessão\n");
+        printf("04- Listar Sessões\n");
+        printf("05- Fazer reserva de ingresso\n");
+        printf("06- Sair do sistema\n");
+        printf("Por gentileza, selecione uma alternativa: ");
+        scanf("%d", &opcao);
+        
+        //Executando a função de acordo com a opção escolhida pelo usuário
+        switch (opcao) {
+            case 1:
+                adicionarFilme();
+                break;
+            case 2:
+                listarFilmes();
+                break;
+            case 3:
+                adicionarSessao();
+                break;
+            case 4:
+                listarSessoes();
+                break;
+            case 5:
+                reservarIngresso();
+                break;
+            case 6:
+                exit(0);  // Finalizando o programa
+                break;
+            default:
+                printf("Ops, essa opção não foi reconhecida.\n");
+                break;
+        }
+    }
+    
+    return 0;
+}
